@@ -1,0 +1,13 @@
+{
+  "Job": {
+        "Periodic": {
+            "Enabled": true,
+            "ProhibitOverlap": true,
+            "Spec": "*/2 * * * * *",
+            "SpecType": "cron",
+            "TimeZone": "UTC"
+        }
+  }
+}
+
+
