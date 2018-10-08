@@ -32,6 +32,16 @@ variable "retry_join" {
   default     = "provider=aws tag_key=ConsulAutoJoin tag_value=auto-join"
 }
 
+variable "consul_binary" {
+  description = "Used to replace the machine image installed Consul binary."
+  default     = "none"
+}
+
+variable "vault_binary" {
+  description = "Used to replace the machine image installed Vault binary."
+  default     = "none"
+}
+
 variable "nomad_binary" {
   description = "Used to replace the machine image installed Nomad binary."
   default     = "none"
@@ -52,6 +62,8 @@ module "hashistack" {
   server_count  = "${var.server_count}"
   client_count  = "${var.client_count}"
   retry_join    = "${var.retry_join}"
+  consul_binary = "${var.consul_binary}"
+  vault_binary  = "${var.vault_binary}"
   nomad_binary  = "${var.nomad_binary}"
 }
 

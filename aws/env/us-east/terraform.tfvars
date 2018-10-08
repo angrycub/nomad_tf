@@ -1,12 +1,11 @@
 name          = "cv_nomad"
 region        = "us-east-1"
 instance_type = "t2.micro"
-ami           = "ami-ec237c93"
+ami           = "ami-0c06ad8c82ba01a36"
 key_name      = "cv_hc-support-eng"
-#key_name ="cv_nomad_vault_repro"
-server_count  = "3"
-client_count  = "3"
+server_count  = "1"
+client_count  = "1"
 
-nomad_binary  = "https://releases.hashicorp.com/nomad/0.7.1/nomad_0.7.1_linux_amd64.zip"
-
-
+nomad_binary = "https://s3.amazonaws.com/nomad-jet-binaries-oct8/nomad-enterprise_0.8.6%2bui-jet%2bent_linux_amd64.zip" 
+#vault_binary  = "https://releases.hashicorp.com/vault/0.8.0/vault_0.8.0_linux_amd64.zip"
+#consul_binary = "https://releases.hashicorp.com/consul/1.2.3/consul_1.2.3_linux_amd64.zip"
