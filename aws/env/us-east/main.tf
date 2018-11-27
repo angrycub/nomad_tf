@@ -70,10 +70,11 @@ module "hashistack" {
 output "IP_Addresses" {
   value = <<CONFIGURATION
 
-Client IPs: 
-${module.hashistack.client_addresses}
 Server IPs: 
 ${module.hashistack.server_addresses}
+Client IPs: 
+${module.hashistack.client_addresses}
+
 
 To connect, add your private key and SSH into any client or server with
 `ssh ubuntu@PUBLIC_IP`. You can test the integrity of the cluster by running:
