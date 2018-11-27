@@ -7,6 +7,8 @@ variable "server_count" {}
 variable "client_count" {}
 variable "retry_join" {}
 variable "nomad_binary" {}
+variable "vault_binary" {}
+variable "consul_binary" {}
 
 data "aws_vpc" "default" {
   default = true
@@ -85,6 +87,8 @@ data "template_file" "user_data_server" {
     server_count = "${var.server_count}"
     region       = "${var.region}"
     retry_join   = "${var.retry_join}"
+    consul_binary = "${var.consul_binary}"
+    vault_binary = "${var.vault_binary}"
     nomad_binary = "${var.nomad_binary}"
   }
 }
@@ -95,6 +99,7 @@ data "template_file" "user_data_client" {
   vars {
     region     = "${var.region}"
     retry_join = "${var.retry_join}"
+    consul_binary = "${var.consul_binary}"
     nomad_binary = "${var.nomad_binary}"
   }
 }

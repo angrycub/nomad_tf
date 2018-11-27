@@ -1,0 +1,27 @@
+# `name` is used to override the default name of hashistack.  This 
+# allows for more than one environment per account
+name          = "cv_nomad"
+
+# `key_name` is the name of the AWS SSH keys to be loaded on the box
+# at provisioning
+key_name      = "cv_hc-support-eng"
+
+# These options allow the HashiCorp binaries in the AMI to be replaced
+# specific versions that are downloadable via http(s).  Typically they
+# are commented unless necessary.
+#nomad_binary  = "https://releases.hashicorp.com/noamd/0.7.1/nomad_0.7.1_linux_amd64.zip" 
+#vault_binary  = "https://releases.hashicorp.com/vault/0.10.0/vault_0.10.0_linux_amd64.zip"
+#consul_binary = "https://releases.hashicorp.com/consul/1.2.3/consul_1.2.3_linux_amd64.zip"
+
+# `region` sets the region to build your cluster in.  The AMI spccified
+# in `ami` must be present in the region for this environment to build
+region        = "us-east-1"
+ami           = "ami-0c06ad8c82ba01a36"
+
+# These options control instance size and count. They should be set
+# according to your needs.
+instance_type = "t2.micro"
+server_count  = "3"
+client_count  = "4"
+
+
