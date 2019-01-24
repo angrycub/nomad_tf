@@ -9,7 +9,7 @@ key_name      = "cv_hc-support-eng"
 # These options allow the HashiCorp binaries in the AMI to be replaced
 # specific versions that are downloadable via http(s).  Typically they
 # are commented unless necessary.
-#nomad_binary  = "https://releases.hashicorp.com/noamd/0.7.1/nomad_0.7.1_linux_amd64.zip" 
+#nomad_binary  = "https://releases.hashicorp.com/nomad/0.7.1/nomad_0.7.1_linux_amd64.zip" 
 #vault_binary  = "https://releases.hashicorp.com/vault/0.10.0/vault_0.10.0_linux_amd64.zip"
 #consul_binary = "https://releases.hashicorp.com/consul/1.2.3/consul_1.2.3_linux_amd64.zip"
 
