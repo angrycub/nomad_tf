@@ -2,7 +2,12 @@ data_dir = "/opt/nomad/data"
 bind_addr = "0.0.0.0"
 log_level = "DEBUG"
 
-# Enable the client
+telemetry {
+  publish_allocation_metrics = true
+  publish_node_metrics       = true
+  prometheus_metrics         = true
+}
+
 client {
   enabled = true
   options {
@@ -11,11 +16,7 @@ client {
   }
 }
 
-consul {
-  address = "127.0.0.1:8500"
-}
-
 vault {
   enabled = true
-  address = "vault.service.consul"
+  address = "http://active.vault.service.consul:8200"
 }

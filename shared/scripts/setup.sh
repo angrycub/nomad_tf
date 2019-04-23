@@ -9,41 +9,48 @@ cd /ops
 
 CONFIGDIR=/ops/shared/config
 
-CONSULVERSION=1.1.0
+CONSULVERSION=1.4.4
 CONSULDOWNLOAD=https://releases.hashicorp.com/consul/${CONSULVERSION}/consul_${CONSULVERSION}_linux_amd64.zip
 CONSULCONFIGDIR=/etc/consul.d
 CONSULDIR=/opt/consul
 
-VAULTVERSION=0.10.2
+VAULTVERSION=1.1.0
 VAULTDOWNLOAD=https://releases.hashicorp.com/vault/${VAULTVERSION}/vault_${VAULTVERSION}_linux_amd64.zip
 VAULTCONFIGDIR=/etc/vault.d
 VAULTDIR=/opt/vault
 
-NOMADVERSION=0.8.4
+NOMADVERSION=0.9.0
 NOMADDOWNLOAD=https://releases.hashicorp.com/nomad/${NOMADVERSION}/nomad_${NOMADVERSION}_linux_amd64.zip
 NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
 
-HADOOPVERSION=2.7.6
-HADOOPDOWNLOAD=http://apache.mirror.iphh.net/hadoop/common/hadoop-${HADOOPVERSION}/hadoop-${HADOOPVERSION}.tar.gz
+HADOOPVERSION=3.2.0
+#HADOOPDOWNLOAD=http://apache.mirror.iphh.net/hadoop/common/hadoop-${HADOOPVERSION}/hadoop-${HADOOPVERSION}.tar.gz
 
-NOMADSPARKDOWNLOAD=https://github.com/hashicorp/nomad-spark/releases/download/v2.2.0-nomad-0.7.0-20180618/spark-2.2.0-bin-nomad-0.7.0-20180618.tgz
-NOMADSPARKTARBALL=spark-2.2.0-bin-nomad-0.7.0-20180618.tgz
+# use S3 local cache of hadoop
+HADOOPDOWNLOAD=https://angrycub-hc.s3.amazonaws.com/public/hadoop-3.2.0.tar.gz
+
+NOMADSPARKDOWNLOAD=https://github.com/hashicorp/nomad-spark/releases/download/v2.4.0-nomad-0.8.6-20181220/spark-2.4.0-bin-nomad-0.8.6-20181220.tgz
+NOMADSPARKTARBALL=spark-2.4.0-bin-nomad-0.8.6-20181220.tgz
 NOMADSPARKDIR=$(basename ${NOMADSPARKTARBALL} .tgz)
 
 # Dependencies
-sudo apt-get install -y software-properties-common
 sudo apt-get update
-sudo apt-get install -y unzip tree redis-tools jq curl tmux
+sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux
 
 # Numpy (for Spark)
-sudo apt-get install -y python-setuptools
-sudo easy_install pip
-sudo pip install numpy
+sudo apt-get install -y python-setuptools python3-pip
+sudo pip3 install numpy
 
 # Disable the firewall
 
 sudo ufw disable || echo "ufw not installed"
+
+# Remove ResovlerStub
+if [ -f "/etc/systemd/resolved.conf" ]; then
+  echo "Disabling the DNSStubListener"
+  echo "DNSStubListener=no" | sudo tee -a /etc/systemd/resolved.conf
+fi
 
 # Consul
 
@@ -99,7 +106,7 @@ sudo apt-get update
 sudo apt-get install -y docker-ce
 
 # rkt
-VERSION=1.29.0
+VERSION=1.23.0
 DOWNLOAD=https://github.com/rkt/rkt/releases/download/v${VERSION}/rkt-v${VERSION}.tar.gz
 
 function install_rkt() {

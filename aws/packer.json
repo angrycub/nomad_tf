@@ -1,11 +1,17 @@
 {
+ "variables": {
+    "my_username": "{{env `USER`}}"
+  },
   "builders": [{
     "type": "amazon-ebs",
     "region": "us-east-1",
-    "source_ami": "ami-80861296",
+    "source_ami": "ami-0fba9b33b5304d8b4",
     "instance_type": "t2.medium",
     "ssh_username": "ubuntu",
-    "ami_name": "hashistack {{timestamp}}",
+    "ami_name": "hashistack {{timestamp}} {{user `my_username` }}",
+    "tags": {
+      "created_by":"{{user `my_username`}}"
+    },
     "ami_groups": ["all"]
   }],
   "provisioners":  [

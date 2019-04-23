@@ -15,8 +15,8 @@ HOME_DIR=ubuntu
 sleep 15
 
 # IP_ADDRESS=$(curl http://instance-data/latest/meta-data/local-ipv4)
-IP_ADDRESS="$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')"
-DOCKER_BRIDGE_IP_ADDRESS=(`ifconfig docker0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`)
+IP_ADDRESS="$(/sbin/ifconfig eth0 | awk '/inet / {print $2}')"
+DOCKER_BRIDGE_IP_ADDRESS="$(/sbin/ifconfig docker0 2>/dev/null| awk '/inet / {print $2}')"
 CLOUD=$1
 SERVER_COUNT=$2
 RETRY_JOIN=$3
@@ -71,7 +71,6 @@ sudo cp $CONFIGDIR/nomad.hcl $NOMADCONFIGDIR
 sudo cp $CONFIGDIR/nomad.service /etc/systemd/system/nomad.service
 
 sudo systemctl start nomad.service
-sleep 10
 export NOMAD_ADDR=http://$IP_ADDRESS:4646
 
 # Add hostname to /etc/hosts
