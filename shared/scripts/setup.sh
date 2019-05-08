@@ -25,6 +25,7 @@ NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
 
 HADOOPVERSION=3.2.0
+HADOOPCONFIGDIR=/usr/local/$HADOOP_VERSION/etc/hadoop
 #HADOOPDOWNLOAD=http://apache.mirror.iphh.net/hadoop/common/hadoop-${HADOOPVERSION}/hadoop-${HADOOPVERSION}.tar.gz
 
 # use S3 local cache of hadoop
@@ -33,6 +34,8 @@ HADOOPDOWNLOAD=https://angrycub-hc.s3.amazonaws.com/public/hadoop-3.2.0.tar.gz
 NOMADSPARKDOWNLOAD=https://github.com/hashicorp/nomad-spark/releases/download/v2.4.0-nomad-0.8.6-20181220/spark-2.4.0-bin-nomad-0.8.6-20181220.tgz
 NOMADSPARKTARBALL=spark-2.4.0-bin-nomad-0.8.6-20181220.tgz
 NOMADSPARKDIR=$(basename ${NOMADSPARKTARBALL} .tgz)
+
+HOME_DIR=ubuntu
 
 # Dependencies
 sudo apt-get update
@@ -99,7 +102,7 @@ sudo chmod 755 ${NOMADDIR}
 
 # Docker
 distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
-sudo apt-get install -y apt-transport-https ca-certificates gnupg2 
+sudo apt-get install -y apt-transport-https ca-certificates gnupg2
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/${distro} $(lsb_release -cs) stable"
 sudo apt-get update
@@ -141,7 +144,7 @@ configure_rkt_networking
 
 # Java
 sudo add-apt-repository -y ppa:openjdk-r/ppa
-sudo apt-get update 
+sudo apt-get update
 sudo apt-get install -y openjdk-8-jdk
 JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
 
@@ -153,3 +156,12 @@ sudo chown -R root:root /usr/local/bin/spark
 
 # Hadoop (to enable the HDFS CLI)
 wget -O - ${HADOOPDOWNLOAD} | sudo tar xz -C /usr/local/
+sudo cp $CONFIGDIR/core-site.xml $HADOOPCONFIGDIR
+
+# Move examples directory to $HOME
+sudo mv /ops/examples /home/$HOME_DIR
+sudo chown -R $HOME_DIR:$HOME_DIR /home/$HOME_DIR/examples
+sudo chmod -R 775 /home/$HOME_DIR/examples
+
+# Update PATH
+echo "export PATH=$PATH:/usr/local/bin/spark/bin:/usr/local/$HADOOP_VERSION/bin" | sudo tee --append /home/$HOME_DIR/.bashrc
