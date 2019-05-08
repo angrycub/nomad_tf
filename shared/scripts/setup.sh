@@ -147,6 +147,8 @@ sudo add-apt-repository -y ppa:openjdk-r/ppa
 sudo apt-get update
 sudo apt-get install -y openjdk-8-jdk
 JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
+echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"  | sudo tee --append /home/$HOME_DIR/.bashrc
+
 
 # Spark
 sudo wget -P /ops/examples/spark ${NOMADSPARKDOWNLOAD}
