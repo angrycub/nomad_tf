@@ -11,7 +11,7 @@
     "ami_name": "hashistack {{timestamp}} {{user `my_username` }}",
     "tags": {
       "created_by":"{{user `my_username`}}",
-      "Name":"{{user `my_username`}}-Nomad_TF"
+      "Name":"{{user `my_username`}}-nomad_tf"
     }
   }],
   "provisioners":  [
