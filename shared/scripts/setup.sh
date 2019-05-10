@@ -166,4 +166,7 @@ sudo chown -R $HOME_DIR:$HOME_DIR /home/$HOME_DIR/examples
 sudo chmod -R 775 /home/$HOME_DIR/examples
 
 # Update PATH
-echo "export PATH=$PATH:/usr/local/bin/spark/bin:/usr/local/$HADOOP_VERSION/bin" | sudo tee --append /home/$HOME_DIR/.bashrc
+echo "export PATH=$PATH:/usr/local/bin/spark/bin:/usr/local/$HADOOPVERSION/bin" | sudo tee --append /home/$HOME_DIR/.bashrc
+
+# Keep AMI up to Update
+sudo apt-get upgrade -y
