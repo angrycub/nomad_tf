@@ -19,10 +19,13 @@ VAULTDOWNLOAD=https://releases.hashicorp.com/vault/${VAULTVERSION}/vault_${VAULT
 VAULTCONFIGDIR=/etc/vault.d
 VAULTDIR=/opt/vault
 
-NOMADVERSION=0.9.0
+NOMADVERSION=0.9.1
 NOMADDOWNLOAD=https://releases.hashicorp.com/nomad/${NOMADVERSION}/nomad_${NOMADVERSION}_linux_amd64.zip
 NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
+
+TERRAFORMVERSION=0.11.13
+TERRAFORMDOWNLOAD=https://releases.hashicorp.com/terraform/${TERRAFORMVERSION}/terraform_${TERRAFORMVERSION}_linux_amd64.zip
 
 HADOOPVERSION=3.2.0
 HADOOPCONFIGDIR=/usr/local/$HADOOP_VERSION/etc/hadoop
@@ -100,6 +103,15 @@ sudo chmod 755 ${NOMADCONFIGDIR}
 sudo mkdir -p ${NOMADDIR}
 sudo chmod 755 ${NOMADDIR}
 
+# Terraform
+
+curl -L ${TERRAFORMDOWNLOAD}> terraform.zip
+
+## Install
+sudo unzip terraform.zip -d /usr/local/bin
+sudo chmod 0755 /usr/local/bin/terraform
+sudo chown root:root /usr/local/bin/terraform
+
 # Docker
 distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
 sudo apt-get install -y apt-transport-https ca-certificates gnupg2
@@ -107,6 +119,8 @@ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/${distro} $(lsb_release -cs) stable"
 sudo apt-get update
 sudo apt-get install -y docker-ce
+sudo usermod -aG docker ${USER}
+
 
 # rkt
 VERSION=1.23.0
