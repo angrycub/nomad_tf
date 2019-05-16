@@ -21,7 +21,7 @@ job "jenkins" {
     }
 
     ephemeral_disk {
-      size = 50
+      size = 500
     }
 
     task "jenkins" {
