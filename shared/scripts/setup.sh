@@ -9,12 +9,12 @@ cd /ops
 
 CONFIGDIR=/ops/shared/config
 
-CONSULVERSION=1.4.4
+CONSULVERSION=1.5.0
 CONSULDOWNLOAD=https://releases.hashicorp.com/consul/${CONSULVERSION}/consul_${CONSULVERSION}_linux_amd64.zip
 CONSULCONFIGDIR=/etc/consul.d
 CONSULDIR=/opt/consul
 
-VAULTVERSION=1.1.0
+VAULTVERSION=1.1.2
 VAULTDOWNLOAD=https://releases.hashicorp.com/vault/${VAULTVERSION}/vault_${VAULTVERSION}_linux_amd64.zip
 VAULTCONFIGDIR=/etc/vault.d
 VAULTDIR=/opt/vault
@@ -24,15 +24,16 @@ NOMADDOWNLOAD=https://releases.hashicorp.com/nomad/${NOMADVERSION}/nomad_${NOMAD
 NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
 
-TERRAFORMVERSION=0.11.13
+TERRAFORMVERSION=0.11.14
 TERRAFORMDOWNLOAD=https://releases.hashicorp.com/terraform/${TERRAFORMVERSION}/terraform_${TERRAFORMVERSION}_linux_amd64.zip
 
-HADOOPVERSION=3.2.0
-HADOOPCONFIGDIR=/usr/local/$HADOOP_VERSION/etc/hadoop
+HADOOPVERSION=2.7.3
+HADOOPCONFIGDIR=/usr/local/hadoop-$HADOOPVERSION/etc/hadoop
 #HADOOPDOWNLOAD=http://apache.mirror.iphh.net/hadoop/common/hadoop-${HADOOPVERSION}/hadoop-${HADOOPVERSION}.tar.gz
 
 # use S3 local cache of hadoop
-HADOOPDOWNLOAD=https://angrycub-hc.s3.amazonaws.com/public/hadoop-3.2.0.tar.gz
+#HADOOPDOWNLOAD=https://angrycub-hc.s3.amazonaws.com/public/hadoop-3.2.0.tar.gz
+HADOOPDOWNLOAD=http://archive.apache.org/dist/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 
 NOMADSPARKDOWNLOAD=https://github.com/hashicorp/nomad-spark/releases/download/v2.4.0-nomad-0.8.6-20181220/spark-2.4.0-bin-nomad-0.8.6-20181220.tgz
 NOMADSPARKTARBALL=spark-2.4.0-bin-nomad-0.8.6-20181220.tgz
@@ -41,12 +42,13 @@ NOMADSPARKDIR=$(basename ${NOMADSPARKTARBALL} .tgz)
 HOME_DIR=ubuntu
 
 # Dependencies
-sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get update -y
 sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux
 
 # Numpy (for Spark)
 sudo apt-get install -y python-setuptools python3-pip
-sudo pip3 install numpy
+sudo -H pip3 install numpy
 
 # Disable the firewall
 
@@ -180,7 +182,4 @@ sudo chown -R $HOME_DIR:$HOME_DIR /home/$HOME_DIR/examples
 sudo chmod -R 775 /home/$HOME_DIR/examples
 
 # Update PATH
-echo "export PATH=$PATH:/usr/local/bin/spark/bin:/usr/local/$HADOOPVERSION/bin" | sudo tee --append /home/$HOME_DIR/.bashrc
-
-# Keep AMI up to Update
-sudo apt-get upgrade -y
+echo "export PATH=$PATH:/usr/local/bin/spark/bin:/usr/local/hadoop-$HADOOPVERSION/bin" | sudo tee --append /home/$HOME_DIR/.bashrc
