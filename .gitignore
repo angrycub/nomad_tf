@@ -4,3 +4,4 @@
 .terraform
 .vagrant
 *.tfvars
+.terraform.tfstate.lock.info
