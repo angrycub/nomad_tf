@@ -1,6 +1,8 @@
 data_dir = "/opt/nomad/data"
 bind_addr = "0.0.0.0"
 log_level = "DEBUG"
+enable_debug = "true"
+enable_syslog = "true"
 
 telemetry {
   publish_allocation_metrics = true
@@ -20,4 +22,3 @@ vault {
   create_from_role = "nomad-cluster"
   token = ""
 }
-
