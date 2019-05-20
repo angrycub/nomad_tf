@@ -42,13 +42,17 @@ NOMADSPARKDIR=$(basename ${NOMADSPARKTARBALL} .tgz)
 HOME_DIR=ubuntu
 
 # Dependencies
-sudo apt-get upgrade -y
 sudo apt-get update -y
 sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux
 
 # Numpy (for Spark)
 sudo apt-get install -y python-setuptools python3-pip
 sudo -H pip3 install numpy
+
+# Ansible
+sudo apt-get install -y software-properties-common
+sudo apt-add-repository --yes --update ppa:ansible/ansible
+sudo apt-get install -y ansible
 
 # Disable the firewall
 
@@ -183,3 +187,6 @@ sudo chmod -R 775 /home/$HOME_DIR/examples
 
 # Update PATH
 echo "export PATH=$PATH:/usr/local/bin/spark/bin:/usr/local/hadoop-$HADOOPVERSION/bin" | sudo tee --append /home/$HOME_DIR/.bashrc
+
+# Keep AMI up to Update
+sudo apt-get upgrade -y
