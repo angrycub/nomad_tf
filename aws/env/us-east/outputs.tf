@@ -7,8 +7,10 @@ Client IPs:
 ${module.hashistack.client_addresses}
 
 
-To connect, add your private key and SSH into any client or server with
-`ssh ubuntu@PUBLIC_IP`. You can test the integrity of the cluster by running:
+To connect, SSH into any client or server with
+`ssh ubuntu@PUBLIC_IP -i private.key`. The private.key is created on any new instance
+run and tied to the KMS key for Vault Unseal.You can test the integrity of the cluster
+by running:
 
   $ consul members
   $ nomad server-members

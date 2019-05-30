@@ -1,4 +1,4 @@
-# Provision a Nomad cluster on AWS
+# Provision a Nomad cluster with Vault Auto Unsealed Via KMS on AWS
 
 ## Pre-requisites
 
@@ -17,11 +17,11 @@ $ export AWS_SECRET_ACCESS_KEY=[AWS_SECRET_ACCESS_KEY]
 
 ## Build an AWS machine image with Packer
 
-[Packer](https://www.packer.io/intro/index.html) is HashiCorp's open source tool 
-for creating identical machine images for multiple platforms from a single 
-source configuration. The Terraform templates included in this repo reference a 
-publicly available Amazon machine image (AMI) by default. The AMI can be customized 
-through modifications to the [build configuration script](../shared/scripts/setup.sh) 
+[Packer](https://www.packer.io/intro/index.html) is HashiCorp's open source tool
+for creating identical machine images for multiple platforms from a single
+source configuration. The Terraform templates included in this repo reference a
+publicly available Amazon machine image (AMI) by default. The AMI can be customized
+through modifications to the [build configuration script](../shared/scripts/setup.sh)
 and [packer.json](packer.json).
 
 Use the following command to build the AMI:
@@ -38,7 +38,7 @@ $ packer build packer.json
 $ cd env/us-east
 ```
 
-Update `terraform.tfvars` with your SSH key name and your AMI ID if you created 
+Update `terraform.tfvars` with your SSH key name and your AMI ID if you created
 a custom AMI:
 
 ```bash
@@ -51,8 +51,8 @@ client_count            = "4"
 ```
 
 Modify the `region`, `instance_type`, `server_count`, and `client_count` variables
-as appropriate. At least one client and one server are required. You can 
-optionally replace the Nomad binary at runtime by adding the `nomad_binary` 
+as appropriate. At least one client and one server are required. You can
+optionally replace the Nomad binary at runtime by adding the `nomad_binary`
 variable like so:
 
 ```bash
@@ -79,13 +79,34 @@ $ terraform apply
 SSH to one of the servers using its public IP:
 
 ```bash
-$ ssh -i /path/to/private/key ubuntu@PUBLIC_IP
+$ ssh -i private.key ubuntu@PUBLIC_IP
 ```
 
-The infrastructure that is provisioned for this test environment is configured to 
-allow all traffic over port 22. This is obviously not recommended for production 
+The infrastructure that is provisioned for this test environment is configured to
+allow all traffic over port 22. This is obviously not recommended for production
 deployments.
 
+## Working With Vault
+
+```bash
+# Once inside the EC2 instance...
+$ vault status
+
+# Initialize Vault
+$ vault operator init -key-shares=1 -key-threshold=1
+
+# Restart the Vault server
+$ sudo systemctl restart vault
+
+# Check to verify that the Vault is auto-unsealed
+$ vault status
+
+$ vault login <INITIAL_ROOT_TOKEN>
+
+# Cleaning up local terraform deployment directory
+$ terraform destroy -force
+$ rm -rf .terraform terraform.tfstate* private.key
+```
 ## Next Steps
 
 Click [here](../README.md#test) for next steps.
