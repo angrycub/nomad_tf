@@ -10,6 +10,34 @@ variable "nomad_binary" {}
 variable "vault_binary" {}
 variable "consul_binary" {}
 
+resource "tls_private_key" "main" {
+  algorithm = "RSA"
+}
+
+resource "null_resource" "main" {
+  provisioner "local-exec" {
+    command = "echo \"${tls_private_key.main.private_key_pem}\" > private.key"
+  }
+
+  provisioner "local-exec" {
+    command = "chmod 600 private.key"
+  }
+}
+
+resource "aws_key_pair" "main" {
+  key_name   = "vault-kms-unseal-${var.key_name}"
+  public_key = "${tls_private_key.main.public_key_openssh}"
+}
+
+resource "aws_kms_key" "vault" {
+  description             = "Vault unseal key"
+  deletion_window_in_days = 10
+
+  tags {
+    Name = "vault-kms-unseal-${var.key_name}"
+  }
+}
+
 data "aws_vpc" "default" {
   default = true
 }
@@ -17,6 +45,10 @@ data "aws_vpc" "default" {
 resource "aws_security_group" "primary" {
   name   = "${var.name}"
   vpc_id = "${data.aws_vpc.default.id}"
+
+  tags {
+    Name = "${var.name}"
+  }
 
   ingress {
     from_port   = 22
@@ -44,12 +76,13 @@ data "template_file" "user_data_server" {
   template = "${file("${path.root}/user-data-server.sh")}"
 
   vars {
-    server_count = "${var.server_count}"
-    region       = "${var.region}"
-    retry_join   = "${var.retry_join}"
+    server_count  = "${var.server_count}"
+    region        = "${var.region}"
+    retry_join    = "${var.retry_join}"
     consul_binary = "${var.consul_binary}"
-    vault_binary = "${var.vault_binary}"
-    nomad_binary = "${var.nomad_binary}"
+    vault_binary  = "${var.vault_binary}"
+    nomad_binary  = "${var.nomad_binary}"
+    kms_key       = "${aws_kms_key.vault.id}"
   }
 }
 
@@ -57,17 +90,17 @@ data "template_file" "user_data_client" {
   template = "${file("${path.root}/user-data-client.sh")}"
 
   vars {
-    region     = "${var.region}"
-    retry_join = "${var.retry_join}"
+    region        = "${var.region}"
+    retry_join    = "${var.retry_join}"
     consul_binary = "${var.consul_binary}"
-    nomad_binary = "${var.nomad_binary}"
+    nomad_binary  = "${var.nomad_binary}"
   }
 }
 
 resource "aws_instance" "server" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_type}"
-  key_name               = "${var.key_name}"
+  key_name               = "vault-kms-unseal-${var.key_name}"
   vpc_security_group_ids = ["${aws_security_group.primary.id}"]
   count                  = "${var.server_count}"
 
@@ -84,7 +117,7 @@ resource "aws_instance" "server" {
 resource "aws_instance" "client" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_type}"
-  key_name               = "${var.key_name}"
+  key_name               = "vault-kms-unseal-${var.key_name}"
   vpc_security_group_ids = ["${aws_security_group.primary.id}"]
   count                  = "${var.client_count}"
   depends_on             = ["aws_instance.server"]
@@ -95,11 +128,11 @@ resource "aws_instance" "client" {
     ConsulAutoJoin = "auto-join"
   }
 
-  ebs_block_device =  {
-    device_name                 = "/dev/xvdd"
-    volume_type                 = "gp2"
-    volume_size                 = "50"
-    delete_on_termination       = "true"
+  ebs_block_device = {
+    device_name           = "/dev/xvdd"
+    volume_type           = "gp2"
+    volume_size           = "50"
+    delete_on_termination = "true"
   }
 
   user_data            = "${data.template_file.user_data_client.rendered}"
@@ -148,6 +181,26 @@ data "aws_iam_policy_document" "auto_discover_cluster" {
   }
 }
 
+data "aws_iam_policy_document" "vault-kms-unseal" {
+  statement {
+    sid       = "VaultKMSUnseal"
+    effect    = "Allow"
+    resources = ["*"]
+
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:DescribeKey",
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "vault-kms-unseal" {
+  name   = "Vault-KMS-Unseal-${var.name}"
+  role   = "${aws_iam_role.instance_role.id}"
+  policy = "${data.aws_iam_policy_document.vault-kms-unseal.json}"
+}
+
 output "server_tag_name" {
   value = ["${aws_instance.server.*.tags.Name}"]
 }
@@ -175,6 +228,7 @@ output "client_private_ips" {
 output "client_addresses" {
   value = "${join("\n",formatlist(" * instance %v - Public: %v, Private: %v", aws_instance.client.*.tags.Name, aws_instance.client.*.public_ip, aws_instance.client.*.private_ip ))}"
 }
+
 output "server_addresses" {
   value = "${join("\n",formatlist(" * instance %v - Public: %v, Private: %v", aws_instance.server.*.tags.Name, aws_instance.server.*.public_ip, aws_instance.server.*.private_ip ))}"
 }
