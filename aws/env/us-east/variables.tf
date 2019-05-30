@@ -8,6 +8,12 @@ variable "region" {
   default     = "us-east-1"
 }
 
+## Adding support for those using ~/.aws/credentials with multiple profiles
+variable "profile" {
+  description = "The profile to use"
+  default     = "default"
+}
+
 variable "ami" {}
 
 variable "instance_type" {
