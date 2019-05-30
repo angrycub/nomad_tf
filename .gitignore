@@ -5,3 +5,4 @@
 .vagrant
 *.tfvars
 .terraform.tfstate.lock.info
+private.key
