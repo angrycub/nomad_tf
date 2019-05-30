@@ -10,5 +10,9 @@ listener "tcp" {
   cluster_address = "IP_ADDRESS:8201"
   tls_disable = 1
 }
+seal "awskms" {
+  region = "AWS_REGION"
+  kms_key_id = "KMS_KEY"
+}
 
 ui = true

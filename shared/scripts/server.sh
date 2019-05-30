@@ -53,6 +53,8 @@ if [[ `wget -S --spider $VAULT_BINARY  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
 fi
 
 sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/vault.hcl
+sed -i "s/AWS_REGION/$AWS_REGION/g" $CONFIGDIR/vault.hcl
+sed -i "s/KMS_KEY/$KMS_KEY/g" $CONFIGDIR/vault.hcl
 sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR
 sudo cp $CONFIGDIR/vault.service /etc/systemd/system/vault.service
 
