@@ -16,7 +16,7 @@ key_name      = "cv_hc-support-eng"
 # `region` sets the region to build your cluster in.  The AMI spccified
 # in `ami` must be present in the region for this environment to build
 region        = "us-east-1"
-ami           = "ami-0c06ad8c82ba01a36"
+ami           = "ami-0a32015e75c1db6f6"
 
 # These options control instance size and count. They should be set
 # according to your needs.
