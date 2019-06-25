@@ -19,7 +19,7 @@ VAULTDOWNLOAD=https://releases.hashicorp.com/vault/${VAULTVERSION}/vault_${VAULT
 VAULTCONFIGDIR=/etc/vault.d
 VAULTDIR=/opt/vault
 
-NOMADVERSION=0.9.1
+NOMADVERSION=0.9.2
 NOMADDOWNLOAD=https://releases.hashicorp.com/nomad/${NOMADVERSION}/nomad_${NOMADVERSION}_linux_amd64.zip
 NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
@@ -46,7 +46,7 @@ sudo apt-get update -y
 sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux
 
 # Numpy (for Spark)
-sudo apt-get install -y python-setuptools python3-pip
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python-setuptools python3-pip
 sudo -H pip3 install numpy
 
 # Ansible
