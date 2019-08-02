@@ -83,7 +83,7 @@ resource "aws_security_group" "primary" {
 data "template_file" "user_data_server" {
   template = "${file("${path.root}/user-data-server.sh")}"
 
-  vars {
+  vars = {
     server_count = "${var.server_count}"
     region       = "${var.region}"
     retry_join   = "${var.retry_join}"
@@ -96,7 +96,7 @@ data "template_file" "user_data_server" {
 data "template_file" "user_data_client" {
   template = "${file("${path.root}/user-data-client.sh")}"
 
-  vars {
+   vars = {
     region     = "${var.region}"
     retry_join = "${var.retry_join}"
     consul_binary = "${var.consul_binary}"
@@ -112,7 +112,7 @@ resource "aws_instance" "server" {
   count                  = "${var.server_count}"
 
   #Instance tags
-  tags {
+  tags = {
     Name           = "${var.name}-server-${count.index + 1}"
     ConsulAutoJoin = "auto-join"
   }
@@ -130,12 +130,12 @@ resource "aws_instance" "client" {
   depends_on             = ["aws_instance.server"]
 
   #Instance tags
-  tags {
+  tags = {
     Name           = "${var.name}-client-${count.index + 1}"
     ConsulAutoJoin = "auto-join"
   }
 
-  ebs_block_device =  {
+  ebs_block_device {
     device_name                 = "/dev/xvdd"
     volume_type                 = "gp2"
     volume_size                 = "50"

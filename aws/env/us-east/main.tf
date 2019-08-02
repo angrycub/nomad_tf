@@ -8,14 +8,16 @@ variable "region" {
   default     = "us-east-1"
 }
 
-variable "ami" {}
+variable "ami" {
+}
 
 variable "instance_type" {
   description = "The AWS instance type to use for both clients and servers."
   default     = "t2.medium"
 }
 
-variable "key_name" {}
+variable "key_name" {
+}
 
 variable "server_count" {
   description = "The number of servers to provision."
@@ -48,23 +50,23 @@ variable "nomad_binary" {
 }
 
 provider "aws" {
-  region = "${var.region}"
+  region = var.region
 }
 
 module "hashistack" {
   source = "../../modules/hashistack"
 
-  name          = "${var.name}"
-  region        = "${var.region}"
-  ami           = "${var.ami}"
-  instance_type = "${var.instance_type}"
-  key_name      = "${var.key_name}"
-  server_count  = "${var.server_count}"
-  client_count  = "${var.client_count}"
-  retry_join    = "${var.retry_join}"
-  consul_binary = "${var.consul_binary}"
-  vault_binary  = "${var.vault_binary}"
-  nomad_binary  = "${var.nomad_binary}"
+  name          = var.name
+  region        = var.region
+  ami           = var.ami
+  instance_type = var.instance_type
+  key_name      = var.key_name
+  server_count  = var.server_count
+  client_count  = var.client_count
+  retry_join    = var.retry_join
+  consul_binary = var.consul_binary
+  vault_binary  = var.vault_binary
+  nomad_binary  = var.nomad_binary
 }
 
 output "IP_Addresses" {
@@ -96,4 +98,6 @@ The Nomad UI can be accessed at http://PUBLIC_IP:4646/ui.
 The Consul UI can be accessed at http://PUBLIC_IP:8500/ui.
 
 CONFIGURATION
+
 }
+
