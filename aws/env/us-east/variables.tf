@@ -14,14 +14,16 @@ variable "profile" {
   default     = "default"
 }
 
-variable "ami" {}
+variable "ami" {
+}
 
 variable "instance_type" {
   description = "The AWS instance type to use for both clients and servers."
   default     = "t2.medium"
 }
 
-variable "key_name" {}
+variable "key_name" {
+}
 
 variable "server_count" {
   description = "The number of servers to provision."
@@ -52,3 +54,4 @@ variable "nomad_binary" {
   description = "Used to replace the machine image installed Nomad binary."
   default     = "none"
 }
+
