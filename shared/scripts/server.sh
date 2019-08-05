@@ -85,3 +85,8 @@ echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
 echo "nameserver $DOCKER_BRIDGE_IP_ADDRESS" | sudo tee /etc/resolv.conf.new
 cat /etc/resolv.conf | sudo tee --append /etc/resolv.conf.new
 sudo mv /etc/resolv.conf.new /etc/resolv.conf
+
+wget https://releases.hashicorp.com/consul-template/0.20.0/consul-template_0.20.0_linux_amd64.zip
+sudo unzip consul-template_0.20.0_linux_amd64.zip -d /usr/local/bin
+sudo chmod 0755 /usr/local/bin/consul-template
+sudo chown root:root /usr/local/bin/consul-template
