@@ -42,6 +42,10 @@ data "aws_vpc" "default" {
   default = true
 }
 
+data "http" "myip" {
+  url = "http://ipv4.icanhazip.com"
+}
+
 resource "aws_security_group" "primary" {
   name   = "${var.name}"
   vpc_id = "${data.aws_vpc.default.id}"
@@ -54,7 +58,14 @@ resource "aws_security_group" "primary" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${chomp(data.http.myip.body)}/32"]
+  }
+
+  ingress {
+    from_port   = 4646
+    to_port     = 4646
+    protocol    = "tcp"
+    cidr_blocks = ["${chomp(data.http.myip.body)}/32"]
   }
 
   ingress {
