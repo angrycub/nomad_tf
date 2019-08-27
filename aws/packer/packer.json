@@ -1,0 +1,41 @@
+{
+ "variables": {
+    "my_username": "{{env `USER`}}",
+    "profile": "default" 
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "us-east-1",
+    "profile": "{{user `profile`}}",
+    "source_ami": "ami-0fba9b33b5304d8b4",
+    "instance_type": "t2.medium",
+    "ssh_username": "ubuntu",
+    "ami_name": "hashistack {{timestamp}} {{user `my_username` }}",
+    "tags": {
+      "created_by":"{{user `my_username`}}",
+      "Name":"{{user `my_username`}}-nomad_tf"
+    }
+  }],
+  "provisioners":  [
+  {
+    "type": "shell",
+    "inline": [
+      "sudo mkdir /ops",
+      "sudo chmod 777 /ops"
+    ]
+  },
+  {
+    "type": "file",
+    "source": "../../shared",
+    "destination": "/ops"
+  },
+  {
+    "type": "file",
+    "source": "../../examples",
+    "destination": "/ops"
+  },
+  {
+    "type": "shell",
+    "script": "../../shared/scripts/setup.sh"
+  }]
+}
