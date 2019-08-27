@@ -110,6 +110,11 @@ resource "aws_instance" "server" {
     ConsulAutoJoin = "auto-join"
   }
 
+  root_block_device = {
+    volume_size = "50"
+  }
+
+
   user_data            = "${data.template_file.user_data_server.rendered}"
   iam_instance_profile = "${aws_iam_instance_profile.instance_profile.name}"
 }
@@ -127,6 +132,11 @@ resource "aws_instance" "client" {
     Name           = "${var.name}-client-${count.index + 1}"
     ConsulAutoJoin = "auto-join"
   }
+
+  root_block_device = {
+    volume_size = "50"
+  }
+
 
   ebs_block_device = {
     device_name           = "/dev/xvdd"
