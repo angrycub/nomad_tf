@@ -49,11 +49,6 @@ sudo apt-get install -y software-properties-common unzip tree redis-tools jq cur
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python-setuptools python3-pip
 sudo -H pip3 install numpy
 
-# Ansible
-sudo apt-get install -y software-properties-common
-sudo apt-add-repository --yes --update ppa:ansible/ansible
-sudo apt-get install -y ansible
-
 # Disable the firewall
 
 sudo ufw disable || echo "ufw not installed"
