@@ -3,6 +3,7 @@ job "jenkins" {
     min_healthy_time = "30s"
     healthy_deadline = "2m"
     auto_revert = true
+    canary = 0
   }
   datacenters = ["dc1"]
 
