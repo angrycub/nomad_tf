@@ -1,7 +1,8 @@
 variable "name" {}
 variable "region" {}
 variable "ami" {}
-variable "instance_type" {}
+variable "server_instance_type" {}
+variable "client_instance_type" {}
 variable "key_name" {}
 variable "server_count" {}
 variable "client_count" {}
@@ -55,15 +56,8 @@ resource "aws_security_group" "primary" {
   }
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["${chomp(data.http.myip.body)}/32"]
-  }
-
-  ingress {
-    from_port   = 4646
-    to_port     = 4646
+    from_port   = 0
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["${chomp(data.http.myip.body)}/32"]
   }
@@ -110,7 +104,7 @@ data "template_file" "user_data_client" {
 
 resource "aws_instance" "server" {
   ami                    = "${var.ami}"
-  instance_type          = "${var.instance_type}"
+  instance_type          = "${var.server_instance_type}"
   key_name               = "vault-kms-unseal-${var.key_name}"
   vpc_security_group_ids = ["${aws_security_group.primary.id}"]
   count                  = "${var.server_count}"
@@ -132,7 +126,7 @@ resource "aws_instance" "server" {
 
 resource "aws_instance" "client" {
   ami                    = "${var.ami}"
-  instance_type          = "${var.instance_type}"
+  instance_type          = "${var.client_instance_type}"
   key_name               = "vault-kms-unseal-${var.key_name}"
   vpc_security_group_ids = ["${aws_security_group.primary.id}"]
   count                  = "${var.client_count}"
