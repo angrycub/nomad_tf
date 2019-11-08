@@ -1,0 +1,100 @@
+{
+    "Job": {
+        "Type": "service",
+        "Name": "spiderham",
+        "Meta": {
+            "spark.nomad.role": "application"
+        },
+        "TaskGroups": [
+            {
+                "Name": "driver",
+                "Count": null,
+                "Constraints": null,
+                "Tasks": [
+                    {
+                        "Name": "jenkins",
+                        "Meta": {
+                            "spark.nomad.role": "driver"
+                        },
+                        "Services": [
+                            {
+                                "Name": "jenkins-server",
+                                "Tags": [
+                                    "global",
+                                    "cicd",
+                                    "urlprefix-/"
+                                ],
+                                "CanaryTags": null,
+                                "PortLabel": "http",
+                                "AddressMode": "",
+                                "Checks": [
+                                    {
+                                        "Id": "",
+                                        "Name": "alive",
+                                        "Type": "tcp",
+                                        "Command": "",
+                                        "Args": null,
+                                        "Path": "",
+                                        "Protocol": "",
+                                        "PortLabel": "",
+                                        "AddressMode": "",
+                                        "Interval": 10000000000,
+                                        "Timeout": 2000000000,
+                                        "InitialStatus": "",
+                                        "TLSSkipVerify": false,
+                                        "Header": null,
+                                        "Method": "",
+                                        "CheckRestart": null,
+                                        "GRPCService": "",
+                                        "GRPCUseTLS": false
+                                    }
+                                ],
+                                "CheckRestart": null
+                            }
+                        ],
+                        "Resources": {
+                            "CPU": 1024,
+                            "MemoryMB": 2048,
+                            "DiskMB": null,
+                            "IOPS": null,
+                            "Networks": [
+                                {
+                                    "Device": "",
+                                    "CIDR": "",
+                                    "IP": "",
+                                    "MBits": 10,
+                                    "ReservedPorts": null,
+                                    "DynamicPorts": [
+                                        {
+                                            "Label": "http",
+                                            "Value": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "RestartPolicy": null,
+                "ReschedulePolicy": null,
+                "EphemeralDisk": null,
+                "Update": null,
+                "Migrate": null,
+                "Meta": null
+            },
+            {
+                "Name": "executors",
+                "Count": 1,
+                "Constraints": null,
+                "Tasks": [
+                    {
+                        "Name": "executor",
+                        "Meta": {
+                            "spark.nomad.role": "executor"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
