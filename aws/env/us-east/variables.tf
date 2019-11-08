@@ -17,8 +17,13 @@ variable "profile" {
 variable "ami" {
 }
 
-variable "instance_type" {
-  description = "The AWS instance type to use for both clients and servers."
+variable "server_instance_type" {
+  description = "The AWS instance type to use for servers."
+  default     = "t2.medium"
+}
+
+variable "client_instance_type" {
+  description = "The AWS instance type to use for clients."
   default     = "t2.medium"
 }
 
