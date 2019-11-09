@@ -29,4 +29,6 @@ The Nomad UI can be accessed at http://PUBLIC_IP:4646/ui.
 The Consul UI can be accessed at http://PUBLIC_IP:8500/ui.
 
 CONFIGURATION
+
 }
+
