@@ -69,6 +69,11 @@ module "hashistack" {
   nomad_binary  = var.nomad_binary
 }
 
+output "ssh_file" {
+  sensitive = true
+  value = module.hashistack.ssh_file
+}
+
 output "IP_Addresses" {
   value = <<CONFIGURATION
 
