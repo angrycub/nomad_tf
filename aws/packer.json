@@ -7,7 +7,15 @@
     "type": "amazon-ebs",
     "region": "us-east-1",
     "profile": "{{user `profile`}}",
-    "source_ami": "ami-0fba9b33b5304d8b4",
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "name": "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
+        "root-device-type": "ebs"
+      },
+      "owners": ["099720109477"],
+      "most_recent": true
+    }, 
     "instance_type": "t2.medium",
     "ssh_username": "ubuntu",
     "ami_name": "hashistack {{timestamp}} {{user `my_username` }}",
@@ -26,16 +34,16 @@
   },
   {
     "type": "file",
-    "source": "../../shared",
+    "source": "../shared",
     "destination": "/ops"
   },
   {
     "type": "file",
-    "source": "../../examples",
+    "source": "../examples",
     "destination": "/ops"
   },
   {
     "type": "shell",
-    "script": "../../shared/scripts/setup.sh"
+    "script": "../shared/scripts/setup.sh"
   }]
 }

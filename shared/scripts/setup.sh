@@ -9,23 +9,20 @@ cd /ops
 
 CONFIGDIR=/ops/shared/config
 
-CONSULVERSION=1.5.0
+CONSULVERSION=1.5.3
 CONSULDOWNLOAD=https://releases.hashicorp.com/consul/${CONSULVERSION}/consul_${CONSULVERSION}_linux_amd64.zip
 CONSULCONFIGDIR=/etc/consul.d
 CONSULDIR=/opt/consul
 
-VAULTVERSION=1.1.2
+VAULTVERSION=1.2.4
 VAULTDOWNLOAD=https://releases.hashicorp.com/vault/${VAULTVERSION}/vault_${VAULTVERSION}_linux_amd64.zip
 VAULTCONFIGDIR=/etc/vault.d
 VAULTDIR=/opt/vault
 
-NOMADVERSION=0.9.2
+NOMADVERSION=0.9.6
 NOMADDOWNLOAD=https://releases.hashicorp.com/nomad/${NOMADVERSION}/nomad_${NOMADVERSION}_linux_amd64.zip
 NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
-
-TERRAFORMVERSION=0.11.14
-TERRAFORMDOWNLOAD=https://releases.hashicorp.com/terraform/${TERRAFORMVERSION}/terraform_${TERRAFORMVERSION}_linux_amd64.zip
 
 HADOOPVERSION=2.7.3
 HADOOPCONFIGDIR=/usr/local/hadoop-$HADOOPVERSION/etc/hadoop
@@ -42,11 +39,16 @@ NOMADSPARKDIR=$(basename ${NOMADSPARKTARBALL} .tgz)
 HOME_DIR=ubuntu
 
 # Dependencies
+echo "Updating Ubuntu"
 sudo apt-get update -y
+sudo apt-get -y install debconf-utils
+echo '* libraties/restart-without-asking boolean true' | sudo debconf-set-selections
+
+echo "Installing Tools"
 sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux
 
-# Numpy (for Spark)
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python-setuptools python3-pip
+# Numpy (for Spark) 
+sudo apt-get install -y python-setuptools python3-pip
 sudo -H pip3 install numpy
 
 # Disable the firewall
@@ -106,12 +108,7 @@ sudo chmod 755 ${NOMADDIR}
 
 # Terraform
 
-curl -L ${TERRAFORMDOWNLOAD}> terraform.zip
-
-## Install
-sudo unzip terraform.zip -d /usr/local/bin
-sudo chmod 0755 /usr/local/bin/terraform
-sudo chown root:root /usr/local/bin/terraform
+curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh | sudo bash
 
 # Docker
 distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')

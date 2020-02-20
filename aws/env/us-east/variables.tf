@@ -60,3 +60,6 @@ variable "nomad_binary" {
   default     = "none"
 }
 
+variable "owner_name" {
+  description = "Used to tag instances with creators name"
+}

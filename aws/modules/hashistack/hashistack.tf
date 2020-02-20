@@ -34,6 +34,9 @@ variable "vault_binary" {
 variable "consul_binary" {
 }
 
+variable "owner_name" {
+}
+
 resource "tls_private_key" "main" {
   algorithm = "RSA"
 }
@@ -136,6 +139,8 @@ resource "aws_instance" "server" {
   tags = {
     Name           = "${var.name}-server-${count.index + 1}"
     ConsulAutoJoin = "auto-join"
+    Owner          = "${var.owner_name}"
+    Keep           = ""
   }
 
   root_block_device {
@@ -158,6 +163,8 @@ resource "aws_instance" "client" {
   tags = {
     Name           = "${var.name}-client-${count.index + 1}"
     ConsulAutoJoin = "auto-join"
+    Owner          = "${var.owner_name}"
+    Keep           = ""
   }
 
   root_block_device {

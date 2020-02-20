@@ -18,5 +18,6 @@ module "hashistack" {
   consul_binary        = var.consul_binary
   vault_binary         = var.vault_binary
   nomad_binary         = var.nomad_binary
+  owner_name           = var.owner_name
 }
 
