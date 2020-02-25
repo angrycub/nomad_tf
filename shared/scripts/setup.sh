@@ -45,7 +45,7 @@ sudo apt-get -y install debconf-utils
 echo '* libraties/restart-without-asking boolean true' | sudo debconf-set-selections
 
 echo "Installing Tools"
-sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux
+sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux zip
 
 # Numpy (for Spark) 
 sudo apt-get install -y python-setuptools python3-pip
@@ -118,6 +118,12 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/${di
 sudo apt-get update
 sudo apt-get install -y docker-ce
 sudo usermod -aG docker ${USER}
+sudo bash -c 'cat << EOT > /etc/docker/daemon.json
+{
+  "debug": true
+}
+EOT'
+
 
 
 # rkt
