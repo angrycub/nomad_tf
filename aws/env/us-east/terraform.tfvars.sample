@@ -6,6 +6,10 @@ name          = "cv_nomad"
 # at provisioning
 key_name      = "cv_hc-support-eng"
 
+# owner information - this is added to the instances as tags.
+owner_name    = "Charlie Voiselle"
+owner_email   = "cvoiselle@hashicorp.com"
+
 # These options allow the HashiCorp binaries in the AMI to be replaced
 # specific versions that are downloadable via http(s).  Typically they
 # are commented unless necessary.

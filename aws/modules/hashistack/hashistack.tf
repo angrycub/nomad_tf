@@ -1,4 +1,6 @@
 variable "name" {}
+variable "owner_name" {}
+variable "owner_email" {}
 variable "region" {}
 variable "ami" {}
 variable "instance_type" {}
@@ -17,6 +19,11 @@ data "aws_vpc" "default" {
 resource "aws_security_group" "primary" {
   name   = "${var.name}"
   vpc_id = "${data.aws_vpc.default.id}"
+
+  tags = {
+    OwnerName      = var.owner_name
+    OwnerEmail     = var.owner_email
+  }
 
   ingress {
     from_port   = 22
@@ -115,6 +122,8 @@ resource "aws_instance" "server" {
   tags = {
     Name           = "${var.name}-server-${count.index + 1}"
     ConsulAutoJoin = "auto-join"
+    OwnerName      = var.owner_name
+    OwnerEmail     = var.owner_email
   }
 
   user_data            = "${data.template_file.user_data_server.rendered}"
@@ -133,6 +142,8 @@ resource "aws_instance" "client" {
   tags = {
     Name           = "${var.name}-client-${count.index + 1}"
     ConsulAutoJoin = "auto-join"
+    OwnerName      = var.owner_name
+    OwnerEmail     = var.owner_email
   }
 
   ebs_block_device {

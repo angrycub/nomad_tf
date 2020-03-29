@@ -11,6 +11,14 @@ variable "region" {
 variable "ami" {
 }
 
+variable owner_name {
+  description = "Name of responsible party; saves as a tag when possible."
+}
+
+variable owner_email {
+  description = "Email address for responsible party; saves as a tag when possible."
+}
+
 variable "instance_type" {
   description = "The AWS instance type to use for both clients and servers."
   default     = "t2.medium"
@@ -57,6 +65,8 @@ module "hashistack" {
   source = "../../modules/hashistack"
 
   name          = var.name
+  owner_name    = var.owner_name
+  owner_email   = var.owner_email
   region        = var.region
   ami           = var.ami
   instance_type = var.instance_type
