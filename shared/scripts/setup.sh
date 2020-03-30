@@ -9,37 +9,31 @@ cd /ops
 
 CONFIGDIR=/ops/shared/config
 
-CONSULVERSION=1.1.0
+CONSULVERSION=1.7.0
 CONSULDOWNLOAD=https://releases.hashicorp.com/consul/${CONSULVERSION}/consul_${CONSULVERSION}_linux_amd64.zip
 CONSULCONFIGDIR=/etc/consul.d
 CONSULDIR=/opt/consul
 
-VAULTVERSION=0.10.2
+VAULTVERSION=1.3.4
 VAULTDOWNLOAD=https://releases.hashicorp.com/vault/${VAULTVERSION}/vault_${VAULTVERSION}_linux_amd64.zip
 VAULTCONFIGDIR=/etc/vault.d
 VAULTDIR=/opt/vault
 
-NOMADVERSION=0.8.4
+NOMADVERSION=0.10.4
 NOMADDOWNLOAD=https://releases.hashicorp.com/nomad/${NOMADVERSION}/nomad_${NOMADVERSION}_linux_amd64.zip
 NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
 
-HADOOPVERSION=2.7.6
-HADOOPDOWNLOAD=http://apache.mirror.iphh.net/hadoop/common/hadoop-${HADOOPVERSION}/hadoop-${HADOOPVERSION}.tar.gz
+# HADOOPVERSION=2.9.2
+# HADOOPDOWNLOAD=http://apache.mirror.iphh.net/hadoop/common/hadoop-${HADOOPVERSION}/hadoop-${HADOOPVERSION}.tar.gz
 
-NOMADSPARKDOWNLOAD=https://github.com/hashicorp/nomad-spark/releases/download/v2.2.0-nomad-0.7.0-20180618/spark-2.2.0-bin-nomad-0.7.0-20180618.tgz
-NOMADSPARKTARBALL=spark-2.2.0-bin-nomad-0.7.0-20180618.tgz
-NOMADSPARKDIR=$(basename ${NOMADSPARKTARBALL} .tgz)
+# NOMADSPARKDOWNLOAD=https://github.com/hashicorp/nomad-spark/releases/download/v2.2.0-nomad-0.7.0-20180618/spark-2.2.0-bin-nomad-0.7.0-20180618.tgz
+# NOMADSPARKTARBALL=spark-2.2.0-bin-nomad-0.7.0-20180618.tgz
+# NOMADSPARKDIR=$(basename ${NOMADSPARKTARBALL} .tgz)
 
 # Dependencies
-sudo apt-get install -y software-properties-common
 sudo apt-get update
-sudo apt-get install -y unzip tree redis-tools jq curl tmux
-
-# Numpy (for Spark)
-sudo apt-get install -y python-setuptools
-sudo easy_install pip
-sudo pip install numpy
+sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux
 
 # Disable the firewall
 
@@ -98,51 +92,17 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/${di
 sudo apt-get update
 sudo apt-get install -y docker-ce
 
-# rkt
-VERSION=1.29.0
-DOWNLOAD=https://github.com/rkt/rkt/releases/download/v${VERSION}/rkt-v${VERSION}.tar.gz
-
-function install_rkt() {
-	wget -q -O /tmp/rkt.tar.gz "${DOWNLOAD}"
-	tar -C /tmp -xvf /tmp/rkt.tar.gz
-	sudo mv /tmp/rkt-v${VERSION}/rkt /usr/local/bin
-	sudo mv /tmp/rkt-v${VERSION}/*.aci /usr/local/bin
-}
-
-function configure_rkt_networking() {
-	sudo mkdir -p /etc/rkt/net.d
-    sudo bash -c 'cat << EOT > /etc/rkt/net.d/99-network.conf
-{
-  "name": "default",
-  "type": "ptp",
-  "ipMasq": false,
-  "ipam": {
-    "type": "host-local",
-    "subnet": "172.16.28.0/24",
-    "routes": [
-      {
-        "dst": "0.0.0.0/0"
-      }
-    ]
-  }
-}
-EOT'
-}
-
-install_rkt
-configure_rkt_networking
-
 # Java
 sudo add-apt-repository -y ppa:openjdk-r/ppa
 sudo apt-get update 
 sudo apt-get install -y openjdk-8-jdk
 JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
 
-# Spark
-sudo wget -P /ops/examples/spark ${NOMADSPARKDOWNLOAD}
-sudo tar -xvf /ops/examples/spark/${NOMADSPARKTARBALL} --directory /ops/examples/spark
-sudo mv /ops/examples/spark/${NOMADSPARKDIR} /usr/local/bin/spark
-sudo chown -R root:root /usr/local/bin/spark
+# # Spark
+# sudo wget -P /ops/examples/spark ${NOMADSPARKDOWNLOAD}
+# sudo tar -xvf /ops/examples/spark/${NOMADSPARKTARBALL} --directory /ops/examples/spark
+# sudo mv /ops/examples/spark/${NOMADSPARKDIR} /usr/local/bin/spark
+# sudo chown -R root:root /usr/local/bin/spark
 
-# Hadoop (to enable the HDFS CLI)
-wget -O - ${HADOOPDOWNLOAD} | sudo tar xz -C /usr/local/
+# # Hadoop (to enable the HDFS CLI)
+# wget -O - ${HADOOPDOWNLOAD} | sudo tar xz -C /usr/local/
