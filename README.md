@@ -6,8 +6,7 @@ Use this repo to easily provision a Nomad sandbox environment on AWS or Azure wi
 [Vault](https://www.vaultproject.io/intro/index.html) are also installed 
 (colocated for convenience). The intention is to allow easy exploration of 
 Nomad and its integrations with the HashiCorp stack. This is *not* meant to be
-a production ready environment. A demonstration of [Nomad's Apache Spark 
-integration](examples/spark/README.md) is included. 
+a production ready environment.
 
 ## Setup
 

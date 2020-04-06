@@ -24,24 +24,19 @@ NOMADDOWNLOAD=https://releases.hashicorp.com/nomad/${NOMADVERSION}/nomad_${NOMAD
 NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
 
-# HADOOPVERSION=2.9.2
-# HADOOPDOWNLOAD=http://apache.mirror.iphh.net/hadoop/common/hadoop-${HADOOPVERSION}/hadoop-${HADOOPVERSION}.tar.gz
-
-# NOMADSPARKDOWNLOAD=https://github.com/hashicorp/nomad-spark/releases/download/v2.2.0-nomad-0.7.0-20180618/spark-2.2.0-bin-nomad-0.7.0-20180618.tgz
-# NOMADSPARKTARBALL=spark-2.2.0-bin-nomad-0.7.0-20180618.tgz
-# NOMADSPARKDIR=$(basename ${NOMADSPARKTARBALL} .tgz)
+CNIVERSION=0.8.4
+CNIDOWNLOAD=https://github.com/containernetworking/plugins/releases/download/v${CNIVERSION}/cni-plugins-linux-amd64-v${CNIVERSION}.tgz
+CNIDIR=/opt/cni
 
 # Dependencies
 sudo apt-get update
-sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux
+sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux dnsmasq
 
 # Disable the firewall
-
 sudo ufw disable || echo "ufw not installed"
 
 # Consul
-
-curl -L ${CONSULDOWNLOAD}> consul.zip
+curl -L -o consul.zip ${CONSULDOWNLOAD}
 
 ## Install
 sudo unzip consul.zip -d /usr/local/bin
@@ -55,8 +50,7 @@ sudo mkdir -p ${CONSULDIR}
 sudo chmod 755 ${CONSULDIR}
 
 # Vault
-
-curl -L ${VAULTDOWNLOAD}> vault.zip
+curl -L -o vault.zip ${VAULTDOWNLOAD}
 
 ## Install
 sudo unzip vault.zip -d /usr/local/bin
@@ -70,8 +64,7 @@ sudo mkdir -p ${VAULTDIR}
 sudo chmod 755 ${VAULTDIR}
 
 # Nomad
-
-curl -L ${NOMADDOWNLOAD}> nomad.zip
+curl -L -o nomad.zip ${NOMADDOWNLOAD}
 
 ## Install
 sudo unzip nomad.zip -d /usr/local/bin
@@ -98,11 +91,11 @@ sudo apt-get update
 sudo apt-get install -y openjdk-8-jdk
 JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
 
-# # Spark
-# sudo wget -P /ops/examples/spark ${NOMADSPARKDOWNLOAD}
-# sudo tar -xvf /ops/examples/spark/${NOMADSPARKTARBALL} --directory /ops/examples/spark
-# sudo mv /ops/examples/spark/${NOMADSPARKDIR} /usr/local/bin/spark
-# sudo chown -R root:root /usr/local/bin/spark
+# CNI plugins
+curl -L -o cni-plugins.tgz ${CNIDOWNLOAD}
+sudo mkdir -p ${CNIDIR}/bin
+sudo tar -C ${CNIDIR}/bin -xzf cni-plugins.tgz
 
-# # Hadoop (to enable the HDFS CLI)
-# wget -O - ${HADOOPDOWNLOAD} | sudo tar xz -C /usr/local/
+# dnsmasq config
+sudo cp /ops/shared/config/10-consul.dnsmasq /etc/dnsmasq.d/10-consul
+

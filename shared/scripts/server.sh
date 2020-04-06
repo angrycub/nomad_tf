@@ -1,30 +1,21 @@
 #!/bin/bash
+SHAREDDIR=/ops/shared
+CONFIGDIR=$SHAREDDIR/config
+SCRIPTDIR=$SHAREDDIR/scripts
 
+source $SCRIPTDIR/net.sh
 set -e
-
-CONFIGDIR=/ops/shared/config
 
 CONSULCONFIGDIR=/etc/consul.d
 VAULTCONFIGDIR=/etc/vault.d
 NOMADCONFIGDIR=/etc/nomad.d
-# HADOOP_VERSION=hadoop-2.9.2
-# HADOOPCONFIGDIR=/usr/local/$HADOOP_VERSION/etc/hadoop
 HOME_DIR=ubuntu
 
 # Wait for network
 sleep 15
 
-function getInterfaceAddress() {
-  ip -4 address show "${1}" | awk '/inet / { print $2 }' | cut -d/ -f1
-}
-
-function getDefaultRouteAddress() {
-  # Default route IP address (seems to be a good way to get host ip)
-  ip route get 1.1.1.1 | grep -oP 'src \K\S+'
-}
-
-IP_ADDRESS = "$(getDefaultRouteAddress)"
-DOCKER_BRIDGE_IP_ADDRESS="$(getInterfaceAddress docker0)"
+IP_ADDRESS=$(net_getDefaultRouteAddress)
+DOCKER_BRIDGE_IP_ADDRESS=$(net_getInterfaceAddress docker0)
 CLOUD=$1
 SERVER_COUNT=$2
 RETRY_JOIN=$3
@@ -90,17 +81,6 @@ echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
 echo "nameserver $DOCKER_BRIDGE_IP_ADDRESS" | sudo tee /etc/resolv.conf.new
 cat /etc/resolv.conf | sudo tee --append /etc/resolv.conf.new
 sudo mv /etc/resolv.conf.new /etc/resolv.conf
-
-# # Hadoop
-# sudo cp $CONFIGDIR/core-site.xml $HADOOPCONFIGDIR
-
-# # Move examples directory to $HOME
-# sudo mv /ops/examples /home/$HOME_DIR
-# sudo chown -R $HOME_DIR:$HOME_DIR /home/$HOME_DIR/examples
-# sudo chmod -R 775 /home/$HOME_DIR/examples
-
-# # Update PATH
-# echo "export PATH=$PATH:/usr/local/bin/spark/bin:/usr/local/$HADOOP_VERSION/bin" | sudo tee --append /home/$HOME_DIR/.bashrc
 
 # Set env vars for tool CLIs
 echo "export CONSUL_RPC_ADDR=$IP_ADDRESS:8400" | sudo tee --append /home/$HOME_DIR/.bashrc

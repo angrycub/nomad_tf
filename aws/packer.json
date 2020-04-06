@@ -1,12 +1,23 @@
 {
+  "variables": {
+    "Created_Email": null,
+    "Created_Name": null
+  },
   "builders": [{
     "type": "amazon-ebs",
     "region": "us-east-1",
     "source_ami": "ami-0a4f4704a9146742a",
     "instance_type": "t2.medium",
     "ssh_username": "ubuntu",
-    "ami_name": "hashistack {{timestamp}}",
-    "ami_groups": ["all"]
+    "ami_name": "Hashistack {{timestamp}}",
+    "ami_groups": [],
+    "tags": {
+      "OS_Version": "Ubuntu",
+      "Release": "18.04",
+      "Architecture": "amd64",
+      "Created_Email": "{{user `Created_Email`}}",
+      "Created_Name": "{{user `Created_Name`}}"
+    }
   }],
   "provisioners":  [
   {
@@ -19,11 +30,6 @@
   {
     "type": "file",
     "source": "../shared",
-    "destination": "/ops"
-  },
-  {
-    "type": "file",
-    "source": "../examples",
     "destination": "/ops"
   },
   {

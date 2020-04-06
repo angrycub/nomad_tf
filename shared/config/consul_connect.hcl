@@ -3,5 +3,5 @@ connect {
 }
 
 ports {
-  "grpc" = "8502"
+  "grpc" = 8502
 }
