@@ -77,12 +77,3 @@ Use the following links to get started with Nomad and its HashiCorp integrations
 * [Consul integration](https://www.nomadproject.io/docs/service-discovery/index.html)
 * [Vault integration](https://www.nomadproject.io/docs/vault-integration/index.html)
 * [consul-template integration](https://www.nomadproject.io/docs/job-specification/template.html)
-
-## Apache Spark integration
-
-Nomad is well-suited for analytical workloads, given its performance
-characteristics and first-class support for batch scheduling. Apache Spark is a
-popular data processing engine/framework that has been architected to use
-third-party schedulers. The Nomad ecosystem includes a [fork that natively
-integrates Nomad with Spark](https://github.com/hashicorp/nomad-spark). A
-detailed walkthrough of the integration is included [here](examples/spark/README.md).
