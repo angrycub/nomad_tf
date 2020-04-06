@@ -2,19 +2,20 @@ data_dir = "/opt/nomad/data"
 bind_addr = "0.0.0.0"
 log_level = "DEBUG"
 
-# Enable the server
+telemetry {
+  publish_allocation_metrics = true
+  publish_node_metrics       = true
+  prometheus_metrics         = true
+}
+
 server {
   enabled = true
   bootstrap_expect = SERVER_COUNT
 }
 
-consul {
-  address = "127.0.0.1:8500"
-}
-
 vault {
   enabled = false
-  address = "vault.service.consul"
+  address = "http://active.vault.service.consul:8200"
   task_token_ttl = "1h"
   create_from_role = "nomad-cluster"
   token = ""
