@@ -1,7 +1,7 @@
 # # `name` is used to override the default name of hashistack.  This
 # # allows for more than one environment per account.  You should change
 # # this value to something more distinct.
-name          = "myNomad"
+name            = "myNomad"
 
 # # `key_name` is the name of the AWS SSH keys to be loaded on the box
 # # at provisioning
@@ -20,8 +20,8 @@ name          = "myNomad"
 
 # `region` sets the region to build your cluster in.  The AMI spccified
 # in `ami` must be present in the region for this environment to build.
-region        = "us-east-1"
-ami           = "ami-044255e69ca7c169f"
+region          = "us-east-1"
+ami             = "ami-027c6b80a9326d2ff"
 
 # # These options control instance size and count. They should be set
 # # according to your needs.
