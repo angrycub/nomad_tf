@@ -77,10 +77,21 @@ export NOMAD_ADDR=http://$IP_ADDRESS:4646
 # Add hostname to /etc/hosts
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
 
+# dnsmasq config
+echo "DNSStubListener=no" | sudo tee -a /etc/systemd/resolved.conf
+sudo cp /ops/shared/config/10-consul.dnsmasq /etc/dnsmasq.d/10-consul
+sudo cp /ops/shared/config/99-default.dnsmasq.$CLOUD /etc/dnsmasq.d/99-default
+sudo mv /etc/resolv.conf /etc/resolv.conf.orig
+grep -v "nameserver" /etc/resolv.conf.orig | grep -v -e"^#" | grep -v -e '^$' | sudo tee /etc/resolv.conf
+echo "nameserver 127.0.0.1" | sudo tee -a /etc/resolv.conf
+sudo systemctl restart systemd-resolved
+sudo systemctl restart dnsmasq
+
 # Add Docker bridge network IP to /etc/resolv.conf (at the top)
 echo "nameserver $DOCKER_BRIDGE_IP_ADDRESS" | sudo tee /etc/resolv.conf.new
 cat /etc/resolv.conf | sudo tee --append /etc/resolv.conf.new
 sudo mv /etc/resolv.conf.new /etc/resolv.conf
+
 
 # Set env vars for tool CLIs
 echo "export CONSUL_RPC_ADDR=$IP_ADDRESS:8400" | sudo tee --append /home/$HOME_DIR/.bashrc

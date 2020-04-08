@@ -2,8 +2,13 @@
 
 set -e
 
+echo "Waiting for cloud-init to update /etc/apt/sources.list"
+timeout 180 /bin/bash -c \
+  'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting ...; sleep 1; done'
+
 # Disable interactive apt prompts
 export DEBIAN_FRONTEND=noninteractive
+echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
 
 cd /ops
 
@@ -19,7 +24,7 @@ VAULTDOWNLOAD=https://releases.hashicorp.com/vault/${VAULTVERSION}/vault_${VAULT
 VAULTCONFIGDIR=/etc/vault.d
 VAULTDIR=/opt/vault
 
-NOMADVERSION=0.10.4
+NOMADVERSION=0.11.0-rc1
 NOMADDOWNLOAD=https://releases.hashicorp.com/nomad/${NOMADVERSION}/nomad_${NOMADVERSION}_linux_amd64.zip
 NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
@@ -30,11 +35,32 @@ CNIDIR=/opt/cni
 
 # Dependencies
 sudo apt-get update
+
 sudo apt-get install -y software-properties-common unzip tree redis-tools jq curl tmux dnsmasq
 
 # Disable the firewall
 sudo ufw disable || echo "ufw not installed"
 
+toLower() {
+  echo $(echo $@ | tr '[:upper:]' '[:lower:]')
+}
+install() {
+  PRODUCT=$(echo $1 | tr '[:upper:]' '[:lower:]')
+  PRODUCT=$1   # should be lowercase
+  curl -L -o consul.zip ${CONSULDOWNLOAD}
+
+  ## Install
+  sudo unzip consul.zip -d /usr/local/bin
+  sudo chmod 0755 /usr/local/bin/consul
+  sudo chown root:root /usr/local/bin/consul
+
+  ## Configure
+  sudo mkdir -p ${CONSULCONFIGDIR}
+  sudo chmod 755 ${CONSULCONFIGDIR}
+  sudo mkdir -p ${CONSULDIR}
+  sudo chmod 755 ${CONSULDIR}
+
+}
 # Consul
 curl -L -o consul.zip ${CONSULDOWNLOAD}
 
@@ -96,6 +122,4 @@ curl -L -o cni-plugins.tgz ${CNIDOWNLOAD}
 sudo mkdir -p ${CNIDIR}/bin
 sudo tar -C ${CNIDIR}/bin -xzf cni-plugins.tgz
 
-# dnsmasq config
-sudo cp /ops/shared/config/10-consul.dnsmasq /etc/dnsmasq.d/10-consul
-
+echo 'debconf debconf/frontend select Dialog' | sudo debconf-set-selections
