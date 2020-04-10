@@ -14,22 +14,22 @@ cd /ops
 
 CONFIGDIR=/ops/shared/config
 
-CONSULVERSION=1.7.0
+CONSULVERSION=1.7.2
 CONSULDOWNLOAD=https://releases.hashicorp.com/consul/${CONSULVERSION}/consul_${CONSULVERSION}_linux_amd64.zip
 CONSULCONFIGDIR=/etc/consul.d
 CONSULDIR=/opt/consul
 
-VAULTVERSION=1.3.4
+VAULTVERSION=1.4.0
 VAULTDOWNLOAD=https://releases.hashicorp.com/vault/${VAULTVERSION}/vault_${VAULTVERSION}_linux_amd64.zip
 VAULTCONFIGDIR=/etc/vault.d
 VAULTDIR=/opt/vault
 
-NOMADVERSION=0.11.0-rc1
+NOMADVERSION=0.11.0
 NOMADDOWNLOAD=https://releases.hashicorp.com/nomad/${NOMADVERSION}/nomad_${NOMADVERSION}_linux_amd64.zip
 NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
 
-CNIVERSION=0.8.4
+CNIVERSION=0.8.5
 CNIDOWNLOAD=https://github.com/containernetworking/plugins/releases/download/v${CNIVERSION}/cni-plugins-linux-amd64-v${CNIVERSION}.tgz
 CNIDIR=/opt/cni
 

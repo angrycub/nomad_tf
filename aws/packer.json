@@ -10,7 +10,7 @@
     "instance_type": "t2.medium",
     "ssh_username": "ubuntu",
     "ami_name": "Hashistack {{timestamp}}",
-    "ami_groups": [],
+    "ami_groups": ["all"],
     "tags": {
       "OS_Version": "Ubuntu",
       "Release": "18.04",
