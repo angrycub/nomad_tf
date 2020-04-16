@@ -239,9 +239,7 @@ output "hosts_file" {
 
 output "ssh_file" {
   value = join("\n",concat(
-    formatlist("Host %v.hs\n  User ubuntu\n  HostName %v\n", aws_instance.server.*.tags.Name, aws_instance.server.*.public_dns),
-    formatlist("Host %v.hs\n  User ubuntu\n  HostName %v\n", aws_instance.client.*.tags.Name, aws_instance.client.*.public_dns)
+    formatlist("Host %v.hs\n  User ubuntu\n  HostName %v\n  StrictHostKeyChecking no\n", aws_instance.server.*.tags.Name, aws_instance.server.*.public_dns),
+    formatlist("Host %v.hs\n  User ubuntu\n  HostName %v\n  StrictHostKeyChecking no\n", aws_instance.client.*.tags.Name, aws_instance.client.*.public_dns)
   ))
 }
-
-
