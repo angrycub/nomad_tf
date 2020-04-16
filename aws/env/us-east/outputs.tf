@@ -1,6 +1,6 @@
 output "ssh_file" {
   sensitive = true
-  value = module.hashistack.ssh_file
+  value     = module.hashistack.ssh_file
 }
 
 output "IP_Addresses" {

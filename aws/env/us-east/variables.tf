@@ -24,14 +24,24 @@ variable owner_email {
   description = "The email address for a responsible party; saves as a tag when possible."
 }
 
-variable "instance_type" {
-  description = "The AWS instance type to use for both clients and servers."
+variable "root_block_device_size" {
+  description = "The volume size of the root block device."
+  default     = 16
+}
+
+variable "server_instance_type" {
+  description = "The AWS instance type to use for servers."
   default     = "t2.medium"
 }
 
 variable "server_count" {
   description = "The number of servers to provision."
   default     = "3"
+}
+
+variable "client_instance_type" {
+  description = "The AWS instance type to use for clients."
+  default     = "t2.medium"
 }
 
 variable "client_count" {
@@ -57,4 +67,8 @@ variable "vault_binary" {
 variable "nomad_binary" {
   description = "An optional URL path to a binary that will replace the installed Nomad binary."
   default     = "none"
+}
+
+variable "whitelist_ip" {
+  description = "IP to whitelist for the security groups (set 0.0.0.0/0 for world)"
 }

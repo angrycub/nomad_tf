@@ -25,8 +25,15 @@ ami             = "ami-027c6b80a9326d2ff"
 
 # # These options control instance size and count. They should be set
 # # according to your needs.
-# instance_type = "t2.micro"
+# server_instance_type = "t2.micro"
 # server_count  = "3"
+# client_instance_type = "t2.micro"
 # client_count  = "4"
 
+# The volume size of the root block device.
+# root_block_device_size = 16
 
+# `whitelist_ip` (required) - IP to whitelist for the security groups (set
+# to 0.0.0.0/0 for world).  
+#  - If it is not provided here, it will be requested interactively.
+whitelist_ip = "0.0.0.0/0"
