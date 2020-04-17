@@ -25,7 +25,8 @@ ami             = "ami-027c6b80a9326d2ff"
 
 # # These options control instance size and count. They should be set
 # # according to your needs.
-# instance_type = "t2.micro"
+# server_instance_type = "t2.micro"
+# client_instance_type = "t2.micro"
 # server_count  = "3"
 # client_count  = "4"
 
