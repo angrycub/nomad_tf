@@ -41,28 +41,8 @@ sudo apt-get install -y software-properties-common unzip tree redis-tools jq cur
 # Disable the firewall
 sudo ufw disable || echo "ufw not installed"
 
-toLower() {
-  echo $(echo $@ | tr '[:upper:]' '[:lower:]')
-}
-install() {
-  PRODUCT=$(echo $1 | tr '[:upper:]' '[:lower:]')
-  PRODUCT=$1   # should be lowercase
-  curl -L -o consul.zip ${CONSULDOWNLOAD}
-
-  ## Install
-  sudo unzip consul.zip -d /usr/local/bin
-  sudo chmod 0755 /usr/local/bin/consul
-  sudo chown root:root /usr/local/bin/consul
-
-  ## Configure
-  sudo mkdir -p ${CONSULCONFIGDIR}
-  sudo chmod 755 ${CONSULCONFIGDIR}
-  sudo mkdir -p ${CONSULDIR}
-  sudo chmod 755 ${CONSULDIR}
-
-}
 # Consul
-curl -L -o consul.zip ${CONSULDOWNLOAD}
+curl -sL -o consul.zip ${CONSULDOWNLOAD}
 
 ## Install
 sudo unzip consul.zip -d /usr/local/bin
@@ -76,7 +56,7 @@ sudo mkdir -p ${CONSULDIR}
 sudo chmod 755 ${CONSULDIR}
 
 # Vault
-curl -L -o vault.zip ${VAULTDOWNLOAD}
+curl -sL -o vault.zip ${VAULTDOWNLOAD}
 
 ## Install
 sudo unzip vault.zip -d /usr/local/bin
@@ -90,7 +70,7 @@ sudo mkdir -p ${VAULTDIR}
 sudo chmod 755 ${VAULTDIR}
 
 # Nomad
-curl -L -o nomad.zip ${NOMADDOWNLOAD}
+curl -sL -o nomad.zip ${NOMADDOWNLOAD}
 
 ## Install
 sudo unzip nomad.zip -d /usr/local/bin
@@ -106,7 +86,7 @@ sudo chmod 755 ${NOMADDIR}
 # Docker
 distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
 sudo apt-get install -y apt-transport-https ca-certificates gnupg2 
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/${distro} $(lsb_release -cs) stable"
 sudo apt-get update
 sudo apt-get install -y docker-ce
@@ -118,7 +98,7 @@ sudo apt-get install -y openjdk-8-jdk
 JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
 
 # CNI plugins
-curl -L -o cni-plugins.tgz ${CNIDOWNLOAD}
+curl -sL -o cni-plugins.tgz ${CNIDOWNLOAD}
 sudo mkdir -p ${CNIDIR}/bin
 sudo tar -C ${CNIDIR}/bin -xzf cni-plugins.tgz
 
