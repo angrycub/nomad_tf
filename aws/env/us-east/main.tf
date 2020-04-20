@@ -13,7 +13,7 @@ module "hashistack" {
   key_name               = var.key_name
   server_instance_type   = var.server_instance_type
   server_count           = var.server_count
-  client_instance_type   = var.server_instance_type
+  client_instance_type   = var.client_instance_type
   client_count           = var.client_count
   root_block_device_size = var.root_block_device_size
   retry_join             = var.retry_join
