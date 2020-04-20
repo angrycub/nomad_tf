@@ -21,7 +21,7 @@ name            = "myNomad"
 # `region` sets the region to build your cluster in.  The AMI spccified
 # in `ami` must be present in the region for this environment to build.
 region          = "us-east-1"
-ami             = "ami-027c6b80a9326d2ff"
+ami             = "ami-0aed55e4f513b3feb"
 
 # # These options control instance size and count. They should be set
 # # according to your needs.
