@@ -3,6 +3,18 @@ output "ssh_file" {
   value     = module.hashistack.ssh_file
 }
 
+output "elb_dns" {
+  value = module.hashistack.elb_dns
+}
+
+output "nomad_addr" {
+  value = module.hashistack.nomad_addr
+}
+
+output "consul_addr" {
+  value = module.hashistack.consul_addr
+}
+
 output "IP_Addresses" {
   value = <<CONFIGURATION
 
@@ -28,8 +40,8 @@ executing:
 
 Simply wait a few seconds and rerun the command if this occurs.
 
-The Nomad UI can be accessed at http://PUBLIC_IP:4646/ui.
-The Consul UI can be accessed at http://PUBLIC_IP:8500/ui.
+The Nomad UI can be accessed at ${module.hashistack.nomad_addr}/ui .
+The Consul UI can be accessed at ${module.hashistack.consul_addr}/ui .
 
 CONFIGURATION
 }

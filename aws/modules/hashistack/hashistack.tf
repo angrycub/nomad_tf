@@ -306,6 +306,18 @@ output "server_addresses" {
   value = join("\n", formatlist(" * instance %v - Public: %v, Private: %v", aws_instance.server.*.tags.Name, aws_instance.server.*.public_ip, aws_instance.server.*.private_ip))
 }
 
+output "elb_dns" {
+  value = aws_elb.server_lb.dns_name
+}
+
+output "nomad_addr" {
+  value = "http://${aws_elb.server_lb.dns_name}:4646"
+}
+
+output "consul_addr" {
+  value = "http://${aws_elb.server_lb.dns_name}:8500"
+}
+
 output "hosts_file" {
   value = join("\n", concat(
     formatlist(" %v.hs         %v", aws_instance.server.*.tags.Name, aws_instance.server.*.public_ip),
