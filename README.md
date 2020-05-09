@@ -36,8 +36,8 @@ properly:
 
 ```bash
 $ consul members
-$ nomad server-members
-$ nomad node-status
+$ nomad server members
+$ nomad node status
 ```
 
 ## Unseal the Vault cluster (optional)
