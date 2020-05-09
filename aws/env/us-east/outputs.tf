@@ -3,6 +3,10 @@ output "ssh_file" {
   value     = module.hashistack.ssh_file
 }
 
+output "hosts_file" {
+  value = module.hashistack.hosts_file
+}
+
 output "elb_dns" {
   value = module.hashistack.elb_dns
 }
