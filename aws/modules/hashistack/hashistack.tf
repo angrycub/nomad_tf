@@ -320,8 +320,8 @@ output "consul_addr" {
 
 output "hosts_file" {
   value = join("\n", concat(
-    formatlist(" %v.hs         %v", aws_instance.server.*.tags.Name, aws_instance.server.*.public_ip),
-    formatlist(" %v.hs         %v", aws_instance.client.*.tags.Name, aws_instance.client.*.public_ip)
+    formatlist(" %-16s  %v.hs", aws_instance.server.*.public_ip, aws_instance.server.*.tags.Name),
+    formatlist(" %-16v  %v.hs", aws_instance.client.*.public_ip, aws_instance.client.*.tags.Name)
   ))
 }
 
